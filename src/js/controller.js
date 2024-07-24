@@ -1,7 +1,8 @@
-const recipeContainer = document.querySelector('.recipe');
 import icons from 'url:../img/icons.svg';
 import 'core-js/stable';
 import 'regenerator-runtime';
+
+const recipeContainer = document.querySelector('.recipe');
 
 const timeout = function (s) {
   return new Promise(function (_, reject) {
@@ -29,11 +30,16 @@ const renderSpinner = function (parentEl) {
 
 const getRecipe = async () => {
   try {
+    const id = window.location.hash.slice(1);
+    console.log(id);
+
+    if (!id) return;
+
     //Loading recipe
     renderSpinner(recipeContainer);
     const res = await fetch(
       // 'https://forkify-api.herokuapp.com/api/v2/recipes/664c8f193e7aa067e94e8ad1',
-      'https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886',
+      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`,
     );
     const data = await res.json();
     if (!res.ok) throw new Error(`${data.message}, (${res.status})`);
@@ -151,4 +157,4 @@ const getRecipe = async () => {
   }
 };
 
-getRecipe();
+['hashchange', 'load'].forEach(ev => window.addEventListener(ev, getRecipe));
